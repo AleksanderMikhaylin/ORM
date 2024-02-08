@@ -13,7 +13,7 @@ class ScopeInlineFormset(BaseInlineFormSet):
     def clean(self):
         is_main = 0
         for form in self.forms:
-            is_main += form.cleaned_data.get('is_main', 0)
+            is_main += form.cleaned_data.get('is_main', 0) * int(not form.cleaned_data.get('DELETE', True))
             if is_main == 2:
                 raise ValidationError('Основной раздел должен быть один!')
 
@@ -21,6 +21,7 @@ class ScopeInlineFormset(BaseInlineFormSet):
             raise ValidationError('Не задан основной раздел!')
 
         return super().clean()  # вызываем базовый код переопределяемого метода
+
 
 class ScopeInline(admin.TabularInline):
     model = Scope
